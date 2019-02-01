@@ -13,7 +13,7 @@ This page explains how to secure and set up a Linux distribution on a virtual ma
 You can visit http://http://35.183.64.11// or ec2-35-183-64-11.ca-central-1.compute.amazonaws.com for the website deployed.
 
 
-
+ssh port is currently set to default port 2200
 
 
 ## Get a server
@@ -21,7 +21,6 @@ You can visit http://http://35.183.64.11// or ec2-35-183-64-11.ca-central-1.comp
 ### Step 1: Start a new Ubuntu Linux server instance on Amazon Lightsail 
 
 - Login into [Amazon Lightsail](https://lightsail.aws.amazon.com/ls/webapp/home/resources) using an Amazon Web Services account.
-- Once you are login into the site, click `Create instance`. 
 - Choose `Linux/Unix` platform, `OS Only` and  `Ubuntu 16.04 LTS`.
 - Choose a instance plan (I took the cheapest, $5/month).
 - Keep the default name provided by AWS or rename your instance.
@@ -106,67 +105,22 @@ then the `Networking` tab, and then change the firewall configuration to match t
 - Allow ports 80(TCP), 123(UDP), and 2200(TCP), and deny the default port 22.
   <img src="images/screen5.png" width="600px">
 
-- From your local terminal, run: `ssh -i ~/.ssh/lightsail_key.rsa -p 2200 ubuntu@13.59.39.163`, where `35.59.39.163` is the public IP address of the instance.
+- From your local terminal, run: `ssh -i ~/.ssh/udacity.rsa -p 2200 ubuntu@35.183.64.11`, where `35.183.64.11` is the public IP address of the instance.
 
 <!--
-Public IP address is 13.59.39.163.
-ssh -i ~/.ssh/lightsail_key.rsa -p 2200 ubuntu@13.59.39.163
+Public IP address is 35.183.64.11.
+ssh -i ~/.ssh/lightsail_key.rsa -p 2200 ubuntu@35.183.64.11
 -->
 
 
 
 
-<a name="step_5_1"></a>
-### Step 5.1: Use `Fail2Ban` to ban attackers 
-
-:white_check_mark: This step was added after first review to meet the specifications.
-
-`Fail2Ban` is an intrusion prevention software framework that protects computer servers from brute-force attacks.
-- Install Fail2Ban: `sudo apt-get install fail2ban`.
-- Install sendmail for email notice: `sudo apt-get install sendmail iptables-persistent`.
-- Create a copy of a file: `sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local`.
-- Change the settings in `/etc/fail2ban/jail.local` file:
-  ```
-  set bantime = 600
-  destemail = useremail@domain
-  action = %(action_mwl)s 
-  ```
-- Under `[sshd]` change `port = ssh` by `port = 2200`.
-- Restart the service: `sudo service fail2ban restart`.
-- You should receive an email like this:
-  <img src="images/screen7.png" width="600px">
-
-**References**
-- DigitalOcean, [How To Protect SSH with Fail2Ban on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04).
-- [Fail2Ban Official website](http://www.fail2ban.org/wiki/index.php/Main_Page).
-
-<a name="step_5_2"></a>
-### Step 5.2: Automatically install updates
-:white_check_mark: This step was added after first review to meet the specifications.
-
-The `unattended-upgrades` package can be used to automatically install important system updates.
-- Enable automatic (security) updates: `sudo apt-get install unattended-upgrades`.
-- Edit `/etc/apt/apt.conf.d/50unattended-upgrades`, uncomment the line `${distro_id}:${distro_codename}-updates` and save it.
-- Modify `/etc/apt/apt.conf.d/20auto-upgrades` file so that the upgrades are downloaded and installed every day:
-  ```
-  APT::Periodic::Update-Package-Lists "1";
-  APT::Periodic::Download-Upgradeable-Packages "1";
-  APT::Periodic::AutocleanInterval "7";
-  APT::Periodic::Unattended-Upgrade "1";
-  ```
-- Enable it: `sudo dpkg-reconfigure --priority=low unattended-upgrades`.
-- Restart Apache: `sudo service apache2 restart`.
-
-**References**
-- Official Ubuntu Documentation, [Automatic Updates](https://help.ubuntu.com/lts/serverguide/automatic-updates.html).
-- Ubuntu Wiki, [AutomaticSecurityUpdates](https://help.ubuntu.com/community/AutomaticSecurityUpdates).
 
 
 <a name="step_5_3"></a>
 ### Step 5.3: Updated packages to most recent versions
-:white_check_mark: This step was added after second review to meet the specifications.
 
-Some packages have not been updated because the server need to be rebooted. I found the solution [here](https://www.digitalocean.com/community/questions/updating-ubuntu-14-04-security-updates).
+
 
 - I did these commands:
   ```
@@ -177,7 +131,7 @@ Some packages have not been updated because the server need to be rebooted. I fo
 
 - Logged back in, and I now see this message:
   ```
-  Alains-MBP:udacity-linux-server-configuration boisalai$ ssh -i ~/.ssh/lightsail_key.rsa -p 2200 ubuntu@13.59.39.163
+  Alains-MBP:udacity-linux-server-configuration boisalai$ ssh -i ~/.ssh/udacity.rsa -p 2200 ubuntu@35.183.64.11
   Welcome to Ubuntu 16.04.3 LTS (GNU/Linux 4.4.0-1039-aws x86_64)
 
    * Documentation:  https://help.ubuntu.com
@@ -205,7 +159,7 @@ Some packages have not been updated because the server need to be rebooted. I fo
 ### Step 6: Create a new user account named `grader`
 
 - While logged in as `ubuntu`, add user: `sudo adduser grader`. 
-- Enter a password (twice) and fill out information for this new user.
+- Enter a password (twice) and fill out information for this new user(optional).
 
 
 ### Step 7: Give `grader` the permission to sudo
