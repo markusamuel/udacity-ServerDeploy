@@ -10,7 +10,7 @@ This page explains how to secure and set up a Linux distribution on a virtual ma
 - The web application is my Movie Item project created earlier in this Nanodegree program.
 - The database server is PostgreSQL.
 
-You can visit http://http://35.183.64.11// or ec2-35-183-64-11.ca-central-1.compute.amazonaws.com for the website deployed.
+You can visit http://35.183.64.11 or ehttp://ec2-35-183-64-11.ca-central-1.compute.amazonaws.com for the website deployed.
 
 
 ssh port is currently set to default port 2200
